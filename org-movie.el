@@ -34,15 +34,36 @@
 (require 'org)
 
 (org-add-link-type "movie" 'org-movie-open)
+(add-hook 'org-store-link-functions 'org-movie-store-link)
 
 (defcustom org-movie-command "smplayer"
   "The shell command to be used to play a movie."
   :group 'org-link
   :type '(string))
 
+(defcustom org-movie-suffix (concat
+			     (regexp-opt
+			      '(".mkv" ".rm" ".rmvb" ".avi" ".3gp" ".mp4")) "$")
+  "The regexp to determine if a file is a movie."
+  :group 'org-link
+  :type '(string))
 (defun org-movie-open (path)
   "Play movie on PATH."
   (start-process "org-movie-open" nil org-movie-command path))
+
+(defun org-movie-store-link ()
+  "Store a link to a manpage."
+  (when (eq major-mode 'dired-mode)
+    (let ((file (abbreviate-file-name
+			 (expand-file-name (dired-get-filename nil t))))
+	  (case-fold-search t)
+	  link pos)
+      (when (and file (string-match org-movie-suffix file))
+	(setq link (concat "movie:" file))
+	(org-store-link-props
+            :type "movie"
+            :link link
+            :description (file-name-nondirectory file))))))
 
 (provide 'org-movie)
 
