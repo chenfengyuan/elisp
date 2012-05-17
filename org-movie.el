@@ -54,8 +54,7 @@
 (defun org-movie-store-link ()
   "Store a link to a manpage."
   (when (eq major-mode 'dired-mode)
-    (let ((file (abbreviate-file-name
-			 (expand-file-name (dired-get-filename nil t))))
+    (let ((file (expand-file-name (dired-get-filename nil t)))
 	  (case-fold-search t)
 	  link pos)
       (when (and file (string-match org-movie-suffix file))
