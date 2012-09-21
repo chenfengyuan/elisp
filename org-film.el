@@ -1,4 +1,4 @@
-;;; org-movie.el
+;;; org-film.el
 ;; This file is not part of Emacs
 
 ;; Copyright (C) 2012 by Chen Fengyuan
@@ -26,44 +26,44 @@
 ;; Put this file on your Emacs-Lisp load path and add the following to your
 ;; ~/.emacs startup file
 ;;
-;; (require 'org-movie)
+;; (require 'org-film)
 ;;
-;; then you can press C-c C-o at link like movie:/path/to/foo.avi in .org files
-;; set org-movie-command to your favouriable mplayer.
+;; then you can press C-c C-o at link like film:/path/to/foo.avi in .org files
+;; set org-film-command to your favouriable mplayer.
 ;; BTW:my english is poor,so if the document is not corrcet,please let me know,thanks:)
 (require 'org)
 
-(org-add-link-type "movie" 'org-movie-open)
-(add-hook 'org-store-link-functions 'org-movie-store-link)
+(org-add-link-type "film" 'org-film-open)
+(add-hook 'org-store-link-functions 'org-film-store-link)
 
-(defcustom org-movie-command "smplayer"
-  "The shell command to be used to play a movie."
+(defcustom org-film-command "smplayer"
+  "The shell command to be used to play a film."
   :group 'org-link
   :type '(string))
 
-(defcustom org-movie-suffix (concat
+(defcustom org-film-suffix (concat
 			     (regexp-opt
 			      '(".mkv" ".rm" ".rmvb" ".avi" ".3gp" ".mp4")) "$")
-  "The regexp to determine if a file is a movie."
+  "The regexp to determine if a file is a film."
   :group 'org-link
   :type '(string))
-(defun org-movie-open (path)
-  "Play movie on PATH."
-  (start-process "org-movie-open" nil org-movie-command path))
+(defun org-film-open (path)
+  "Play film on PATH."
+  (start-process "org-film-open" nil org-film-command path))
 
-(defun org-movie-store-link ()
+(defun org-film-store-link ()
   "Store a link to a manpage."
   (when (eq major-mode 'dired-mode)
     (let ((file (expand-file-name (dired-get-filename nil t)))
 	  (case-fold-search t)
 	  link pos)
-      (when (and file (string-match org-movie-suffix file))
-	(setq link (concat "movie:" file))
+      (when (and file (string-match org-film-suffix file))
+	(setq link (concat "film:" file))
 	(org-store-link-props
-            :type "movie"
+            :type "film"
             :link link
             :description (file-name-nondirectory file))))))
 
-(provide 'org-movie)
+(provide 'org-film)
 
-     ;;; org-movie.el ends here
+     ;;; org-film.el ends here
