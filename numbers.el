@@ -15,4 +15,12 @@
   (interactive "nHow many numbers: ")
   (dotimes (i n)
     (insert (concat (random-number) " "))))
+;;;###autoload
+(defun output-random-numbers-to-file (file n)
+  (interactive "fFile: \nnNumbers: ")
+  (with-current-buffer (find-file-noselect file)
+    (erase-buffer)
+    (dotimes (i n)
+      (insert (concat (random-number) " ")))
+    (save-buffer)))
 (provide 'numbers)
