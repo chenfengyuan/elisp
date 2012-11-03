@@ -13,14 +13,13 @@
 ;;;###autoload
 (defun insert-random-number (n)
   (interactive "nHow many numbers: ")
-  (dotimes (i n)
-    (insert (concat (random-number) " "))))
+  (dotimes (i (1- n))
+    (insert (random-number) " "))
+  (insert (random-number))
+  (insert "\n"))
 ;;;###autoload
 (defun output-random-numbers-to-file (file n)
   (interactive "fFile: \nnNumbers: ")
-  (with-current-buffer (find-file-noselect file)
-    (erase-buffer)
-    (dotimes (i n)
-      (insert (concat (random-number) " ")))
-    (save-buffer)))
+  (with-temp-file file
+    (insert-random-number n)))
 (provide 'numbers)
