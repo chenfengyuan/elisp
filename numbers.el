@@ -2,24 +2,24 @@
   (require 'cl))
 
 (defvar random-numbers
-  ["0" "nought" "null" "nil" "nothing" "1" "2" "3" "4" "5" "6" "7" "8" "9"])
+  ["0" "nought" "null" "nil" "nothing"])
 ;;;###autoload
-(defun random-number ()
-  (let ((n (random (length random-numbers))))
-    (if (vectorp (elt random-numbers n))
-	(elt (elt random-numbers n)
-	     (random (length (elt random-numbers n))))
-      (elt random-numbers n))))
+(defun random-number (max)
+  (let ((n (random max)))
+    (if (= n 0)
+	(let ((n (random (length random-numbers))))
+	  (elt random-numbers n))
+      (number-to-string n))))
 ;;;###autoload
-(defun insert-random-number (n)
+(defun insert-random-number (n max)
   (interactive "nHow many numbers: ")
   (dotimes (i (1- n))
-    (insert (random-number) " "))
-  (insert (random-number))
+    (insert (random-number max) " "))
+  (insert (random-number max))
   (insert "\n"))
 ;;;###autoload
-(defun output-random-numbers-to-file (file n)
-  (interactive "fFile: \nnNumbers: ")
+(defun output-random-numbers-to-file (file n max)
+  (interactive "fFile: \nnNumbers: \nnMaximize: ")
   (with-temp-file file
-    (insert-random-number n)))
+    (insert-random-number n max)))
 (provide 'numbers)
