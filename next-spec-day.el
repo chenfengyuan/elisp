@@ -34,7 +34,15 @@
 		    'org-deadline
 		  'org-schedule)
 		nil
-		(format-time-string (car org-time-stamp-formats) (apply 'encode-time pt))))
+		(format-time-string
+		 (if (and
+		      time
+		      (string-match
+		       "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}"
+		       time))
+		     (cdr org-time-stamp-formats)
+		   (car org-time-stamp-formats))
+		 (apply 'encode-time pt))))
 	    (incf (nth 3 pt))
 	    (setf pt (decode-time (apply 'encode-time pt)))))))
     (if (or
