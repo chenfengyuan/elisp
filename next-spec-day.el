@@ -1,3 +1,15 @@
+;; how to use:
+;; 1.load this file
+;; 2.set the properties ("NEXT-SPEC-DEADLINE" "NEXT-SPEC-SCHEDULED") of the TODO item,like
+;; * TODO test spec
+;;   SCHEDULED: <2013-06-16 Sun> DEADLINE: <2012-12-31 Mon -3d>
+;;   :PROPERTIES:
+;;   :NEXT-SPEC-DEADLINE: (= (calendar-extract-day date) (calendar-last-day-of-month (calendar-extract-month date) (calendar-extract-year date)))
+;;   :NEXT-SPEC-SCHEDULED: (org-float 6 0 3)
+;;   :END:
+;; 3.elisp will automatic set the proper date
+
+
 (eval-when-compile (require 'cl))
 (defvar next-spec-day-runningp)
 (setq next-spec-day-runningp nil)
