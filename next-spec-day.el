@@ -1,4 +1,4 @@
-;; how to use:
+;; How to use:
 ;; 1. add `(load "/path/to/next-spec-day")` to your dot emacs file.
 ;; 2. set `NEXT-SPEC-DEADLINE` and/or `NEXT-SPEC-SCHEDULED` property of a TODO task,like this:
 ;;         * TODO test
@@ -10,11 +10,30 @@
 ;;     The value of NEXT-SPEC-DEADLINE will return `non-nil` if `date` is last day of month,and the value of NEXT-SPEC-SCHEDULED will return `non-nil` if `date` is the fathers' day(the third Sunday of June).
 ;; 3. Then,when you change the TODO state of that tasks,the timestamp will be changed automatically(include lead time of warnings settings).
 ;; Notes:
-;; execute `(setq next-spec-day-runningp nil)' after your sexp signal some erros,
+;; 1. Execute `(setq next-spec-day-runningp nil)' after your sexp signal some erros,
+;; 2. You can also use some useful sexp from next-spec-day-alist,like:
+;; * TODO test
+;;   SCHEDULED: <2013-03-29 Fri>
+;;   :PROPERTIES:
+;;   :NEXT-SPEC-SCHEDULED: last-workday-of-month
+;;   :END:
 
 (eval-when-compile (require 'cl))
 (defvar next-spec-day-runningp)
 (setq next-spec-day-runningp nil)
+(defvar next-spec-day-alist
+  '((last-workday-of-month
+     .
+     ((or
+       (and (= (calendar-last-day-of-month m y) d) (/= (calendar-day-of-week date) 0) (/= (calendar-day-of-week date) 6))
+       (and (< (- (calendar-last-day-of-month m y) d) 3) (string= (calendar-day-name date) "Friday")))))
+    (last-day-of-month
+     .
+     ((= (calendar-extract-day date) (calendar-last-day-of-month (calendar-extract-month date) (calendar-extract-year date)))))
+    (fathers-day
+     .
+     ((org-float 6 0 3))))
+  "contain some useful sexp")
 (defun next-spec-day ()
   (unless next-spec-day-runningp
     (setq next-spec-day-runningp t)
@@ -24,7 +43,10 @@
 	  (let* ((time (org-entry-get nil (substring type (length "NEXT-SPEC-"))))
 		 (pt (if time (org-parse-time-string time) (decode-time (current-time))))
 		 (func (ignore-errors (read-from-whole-string (org-entry-get nil type)))))
+	    (message "%S" func)
 	    (unless func (message "Sexp is wrong") (throw 'exit nil))
+	    (when (symbolp func)
+	      (setq func (cadr (assoc func next-spec-day-alist))))
 	    (incf (nth 3 pt))
 	    (setf pt (decode-time (apply 'encode-time pt)))
 	    (do ((i 0 (1+ i)))
@@ -60,3 +82,4 @@
 	  (org-entry-put nil "TODO" (car org-todo-heads))))
     (setq next-spec-day-runningp nil)))
 (add-hook 'org-after-todo-state-change-hook 'next-spec-day)
+
