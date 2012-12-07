@@ -1,14 +1,14 @@
 ;; how to use:
-;; 1.load this file
-;; 2.set the properties ("NEXT-SPEC-DEADLINE" "NEXT-SPEC-SCHEDULED") of the TODO item,the value of thise should contain a sexp that return `non-nil' if `date' is the day.like org-float function.Here's a example,the value of NEXT-SPEC-DEADLINE will return `non-nil' if `date' is last day of month,and the value of NEXT-SPEC-SCHEDULED: will return `non-nil' if `date' is the fathers' day(the third Sunday of June):
-;; * TODO test
-;;   SCHEDULED: <2013-06-16 Sun> DEADLINE: <2012-12-31 Mon -3d>
-;;   :PROPERTIES:
-;;   :NEXT-SPEC-DEADLINE: (= (calendar-extract-day date) (calendar-last-day-of-month (calendar-extract-month date) (calendar-extract-year date)))
-;;   :NEXT-SPEC-SCHEDULED: (org-float 6 0 3)
-;;   :END:
-;; 3.when the TODO state of the task changes,elisp will automatic set the proper date
-
+;; 1. add `(load "/path/to/next-spec-day")` to your dot emacs file.
+;; 2. set `NEXT-SPEC-DEADLINE` and/or `NEXT-SPEC-SCHEDULED` property of a TODO task,like this:
+;;         * TODO test
+;;           SCHEDULED: <2013-06-16 Sun> DEADLINE: <2012-12-31 Mon -3d>
+;;           :PROPERTIES:
+;;           :NEXT-SPEC-DEADLINE: (= (calendar-extract-day date) (calendar-last-day-of-month (calendar-extract-month date) (calendar-extract-year date)))
+;;           :NEXT-SPEC-SCHEDULED: (org-float 6 0 3)
+;;           :END:
+;;     The value of NEXT-SPEC-DEADLINE will return `non-nil` if `date` is last day of month,and the value of NEXT-SPEC-SCHEDULED will return `non-nil` if `date` is the fathers' day(the third Sunday of June).
+;; 3. Then,when you change the TODO state of that tasks,the timestamp will be changed automatically(include lead time of warnings settings).
 
 (eval-when-compile (require 'cl))
 (defvar next-spec-day-runningp)
