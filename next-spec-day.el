@@ -7,7 +7,7 @@
 ;;   :NEXT-SPEC-DEADLINE: (= (calendar-extract-day date) (calendar-last-day-of-month (calendar-extract-month date) (calendar-extract-year date)))
 ;;   :NEXT-SPEC-SCHEDULED: (org-float 6 0 3)
 ;;   :END:
-;; 3.elisp will automatic set the proper date
+;; 3.when the TODO state of the task changes,elisp will automatic set the proper date
 
 
 (eval-when-compile (require 'cl))
