@@ -17,7 +17,10 @@
 ;;   :PROPERTIES:
 ;;   :NEXT-SPEC-SCHEDULED: last-workday-of-month
 ;;   :END:
-
+;; 3. If you encounter some errors like 'org-insert-time-stamp: Wrong type argument: listp, "<2013-03-29 星期五>"' when change the TODO state,please try a new version of org mode.To use the new version:
+;; (1). download the new version of org mode from orgmode.org,then uncompress it.
+;; (2). add (add-to-list 'load-path "/path/to/org-*.*.*/lisp") to your .emacs file,make sure it's before any (require 'org).If you are not sure,just insert it to the first line of your dot emacs file.
+;; (3). restart your emacs,everything should be fine.
 (eval-when-compile (require 'cl))
 (defvar next-spec-day-runningp)
 (setq next-spec-day-runningp nil)
