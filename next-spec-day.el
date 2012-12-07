@@ -43,7 +43,6 @@
 	  (let* ((time (org-entry-get nil (substring type (length "NEXT-SPEC-"))))
 		 (pt (if time (org-parse-time-string time) (decode-time (current-time))))
 		 (func (ignore-errors (read-from-whole-string (org-entry-get nil type)))))
-	    (message "%S" func)
 	    (unless func (message "Sexp is wrong") (throw 'exit nil))
 	    (when (symbolp func)
 	      (setq func (cadr (assoc func next-spec-day-alist))))
@@ -82,4 +81,5 @@
 	  (org-entry-put nil "TODO" (car org-todo-heads))))
     (setq next-spec-day-runningp nil)))
 (add-hook 'org-after-todo-state-change-hook 'next-spec-day)
-
+(unless (fboundp 'read-from-whole-string) (require 'thingatpt))
+(unless (fboundp 'calendar-last-day-of-month) (require 'thingatpt))
