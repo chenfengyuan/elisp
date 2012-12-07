@@ -22,27 +22,31 @@
 	       (pt (if time (org-parse-time-string time) (decode-time (current-time))))
 	       (func (read-from-whole-string (org-entry-get nil type))))
 	  (incf (nth 3 pt))
-	  (do nil
-	      ((let* ((d (nth 3 pt))
-		      (m (nth 4 pt))
-		      (y (nth 5 pt))
-		      (date (list m d y))
-		      entry)
-		 (eval func))
-	       (funcall
-		(if (string= "NEXT-SPEC-DEADLINE" type)
-		    'org-deadline
-		  'org-schedule)
-		nil
-		(format-time-string
-		 (if (and
-		      time
-		      (string-match
-		       "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}"
-		       time))
-		     (cdr org-time-stamp-formats)
-		   (car org-time-stamp-formats))
-		 (apply 'encode-time pt))))
+	  (do ((i 0 (1+ i)))
+	      ((or
+		(> i 1000)
+		(let* ((d (nth 3 pt))
+		       (m (nth 4 pt))
+		       (y (nth 5 pt))
+		       (date (list m d y))
+		       entry)
+		  (ignore-errors (eval func))))
+	       (if (> i 1000)
+		   (message "No satisfied in 1000 days")
+		 (funcall
+		  (if (string= "NEXT-SPEC-DEADLINE" type)
+		      'org-deadline
+		    'org-schedule)
+		  nil
+		  (format-time-string
+		   (if (and
+			time
+			(string-match
+			 "[[:digit:]]\\{2\\}:[[:digit:]]\\{2\\}"
+			 time))
+		       (cdr org-time-stamp-formats)
+		     (car org-time-stamp-formats))
+		   (apply 'encode-time pt)))))
 	    (incf (nth 3 pt))
 	    (setf pt (decode-time (apply 'encode-time pt)))))))
     (if (or
